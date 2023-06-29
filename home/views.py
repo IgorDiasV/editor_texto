@@ -14,3 +14,7 @@ def salvar(request):
     resposta = {'mensagem':'Texto salvo com Sucesso'}
     resposta = json.dumps(resposta)
     return HttpResponse(resposta)
+
+def textos_salvos(request):
+    textos = Texto.objects.all()
+    return render(request,'textos_salvos.html', {'textos': textos})
