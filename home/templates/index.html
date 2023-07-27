@@ -24,7 +24,10 @@
       {% csrf_token %}
       <h1 class="text-center">Editor de Texto Simples</h1>
       <div id="editor"></div>
-
+      <form id='texto_form' action="{% url 'salvar' %}" method='POST'>
+        <input type="hidden" name='texto' id='texto-input'>
+        {% csrf_token %}
+      </form>
       <button onclick="salvar()">Salvar Texto</button>
       <a href="{% url 'textos_salvos' %}"><button >Textos Salvos</button></a>
       <p id='mensagem_servidor'></p>
@@ -53,27 +56,10 @@
       function get_html() {
         return quill.root.innerHTML;
       }
-
-      async function salvar() {
-        let csrf_token = document.querySelector(
-          "[name=csrfmiddlewaretoken]"
-        ).value;
-        let texto = get_html();
-        const config = {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": csrf_token,
-          },
-          body: JSON.stringify({ texto: texto }),
-          
-        };
-       
-        const response = await fetch("{%url 'salvar'%}", config);
-        let dados = await response.json()
-        let resposta_servidor = document.getElementById('mensagem_servidor')
-        resposta_servidor.textContent = dados['mensagem']
-        
-       
+      function salvar(){
+        document.getElementById('texto-input').value = get_html()
+        var formulario = document.getElementById("texto_form")
+        formulario.submit()
       }
       let quill = new Quill("#editor", definicao_quill);
     </script>
